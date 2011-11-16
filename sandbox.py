@@ -7,6 +7,7 @@ Created on Nov 16, 2011
 import epf_epm as epm
 import epf_epg as epg
 import epf_viz as viz
+import epf_reduce as reduce
 
 S = epm.system("ABC System")
 S.add_element('A', 0.1, 0.8, 0.0)
@@ -25,7 +26,12 @@ V.draw_epm(S)
 G = epg.EPG()
 G.generate(S)
 
-V.draw_epg(G)
-G.iter_compute(0.001)
-G.show_results(10)
 
+#G.iter_compute(0.001)
+G.direct_compute()
+G.show_results(10)
+V.draw_epg(G)
+
+R = reduce.reducer()
+R.reduce(G, 0)
+V.draw_epg(G,'reduced_EPG')
