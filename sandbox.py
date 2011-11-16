@@ -17,7 +17,7 @@ S.add_cf_arc('A', 'C', 0.5)
 S.add_cf_arc('B', 'A', 0.9)
 S.add_cf_arc('B', 'C', 0.1)
 S.add_df_arc('A', 'B')
-S.add_cf_arc('B', 'C')
+S.add_df_arc('B', 'C')
 
 V = viz.viz()
 V.draw_epm(S)
@@ -26,5 +26,6 @@ G = epg.EPG()
 G.generate(S)
 
 V.draw_epg(G)
-
+G.iter_compute(0.001)
+G.show_results(10)
 

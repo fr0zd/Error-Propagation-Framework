@@ -68,7 +68,7 @@ class viz(object):
         #st = 'nxt:' + NXT + '\\n' + 'FA:' + EFA + '\\n' + 'EP:' + EEP + '\\n' + 'ED:' + EED
         return st    
     
-    def make_s_name_a(self, s):
+    def make_s_name(self, s):
         NXT = ''
         if isinstance(s.e_next, str):
             NXT = s.e_next
@@ -99,7 +99,7 @@ class viz(object):
             pass
         EPG = pgv.AGraph(directed=True)
         for a in G.A:
-            EPG.add_edge(self.make_s_name_a(a.s1), self.make_s_name_a(a.s2), label=str(a.pr))
+            EPG.add_edge(self.make_s_name(a.s1), self.make_s_name(a.s2), label=str(a.pr))
         EPG.draw(G.EPM.name+'/EPG.pdf',prog='dot')
 
 

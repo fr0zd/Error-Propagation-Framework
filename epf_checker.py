@@ -59,7 +59,7 @@ class data_checker (object):
 
         
     def check_s(self, st):
-        if isinstance(st,epg.s):
+        if isinstance(st,epg.state):
             return st
         else:
             raise TypeError('state is not state')
