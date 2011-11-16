@@ -33,5 +33,5 @@ G.show_results(10)
 V.draw_epg(G)
 
 R = reduce.reducer()
-R.reduce(G, 0)
+R.reduce(G,0)
 V.draw_epg(G,'reduced_EPG')
