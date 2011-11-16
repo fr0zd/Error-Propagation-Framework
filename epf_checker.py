@@ -6,6 +6,7 @@ Created on Jun 9, 2011
 
 
 import epf_epm as epm
+import epf_epg as epg
 
 
 class data_checker (object):
@@ -57,15 +58,14 @@ class data_checker (object):
         return False    
 
         
-#    def check_s(self, st):
-#        if isinstance(st,epg.s):
-#            return st
-#        else:
-#            raise TypeError('state is not state')
-#            return None
-#        
-#            
-#        
+    def check_s(self, st):
+        if isinstance(st,epg.s):
+            return st
+        else:
+            raise TypeError('state is not state')
+            return None
+                    
+        
         
     def __init__(self):
         self.EDB_list = ['FS','EM','EC']
