@@ -35,15 +35,21 @@ class viz(object):
         except:
             pass
         CFG = pgv.AGraph(directed=True)
+        CFG.add_node(self.make_e_name(S.initial,no_el_data),color="blue")
         for a in S.ACF:
             if no_pr:
                 CFG.add_edge(self.make_e_name(a.e1,no_el_data), self.make_e_name(a.e2,no_el_data))
             else:
                 CFG.add_edge(self.make_e_name(a.e1,no_el_data), self.make_e_name(a.e2,no_el_data), label=str(a.pr))
-        CFG.draw(S.name+'/CFG.pdf',prog='dot')
+        
         DFG = pgv.AGraph(directed=True)
+        DFG.add_node(self.make_e_name(S.initial,no_el_data),color='blue')
         for a in S.ADF:
             DFG.add_edge(self.make_e_name(a.e1,no_el_data), self.make_e_name(a.e2,no_el_data))
+            
+        CFG.edge_attr.update(color='blue')
+        DFG.edge_attr.update(color='darkgreen')            
+        CFG.draw(S.name+'/CFG.pdf',prog='dot')
         DFG.draw(S.name+'/DFG.pdf',prog='dot')
            
     
@@ -72,7 +78,8 @@ class viz(object):
             st = st + '\\n' + 'ED:' + EED
         
         if not noprob:
-            st = st + '\\n' + 'Pr:' + str(s.pr)[0:7]
+            if len(s.O) ==0:
+                st = st + '\\n' + 'Pr:' + str(s.pr)[0:7]
         
         return st      
     
@@ -83,8 +90,34 @@ class viz(object):
         except:
             pass
         EPG = pgv.AGraph(directed=True)
+        EPG.node_attr['style']='filled'
+        for s in G.S:
+            if len(s.O) == 0:
+                if len(s.EEP) == 0:
+                    EPG.add_node(self.make_s_name(s))
+                    n = EPG.get_node(self.make_s_name(s))
+                    n.attr['fillcolor']="blue"
+                else:
+                    if len(s.EED) > 0:
+                        EPG.add_node(self.make_s_name(s))
+                        n = EPG.get_node(self.make_s_name(s))
+                        n.attr['fillcolor']="purple"
+                    else:
+                        EPG.add_node(self.make_s_name(s))
+                        n = EPG.get_node(self.make_s_name(s))
+                        n.attr['fillcolor']="red"
+            else:
+                if len(s.EEP) > 0:
+                    EPG.add_node(self.make_s_name(s),color="red")
+                    n = EPG.get_node(self.make_s_name(s))
+                    n.attr['fillcolor']="white"
+                else:
+                    EPG.add_node(self.make_s_name(s),color="blue")
+                    n = EPG.get_node(self.make_s_name(s))
+                    n.attr['fillcolor']="white"           
         for a in G.A:
             EPG.add_edge(self.make_s_name(a.s1), self.make_s_name(a.s2), label=str(a.pr))
+        
         if name == '':
             EPG.draw(G.EPM.name+'/EPG.pdf',prog='dot')
         else:

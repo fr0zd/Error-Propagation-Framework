@@ -54,7 +54,7 @@ class state(object):
         self.next_pr = 0
 
             
-class EPG(object):
+class graph(object):
     """Main class of EPG description"""
     
     def __init__(self, name = 'EPG 1'):
@@ -73,7 +73,7 @@ class EPG(object):
                     #raise TypeError('state is already in S')
                     return old_s
         if name == '':
-            name = 's'+str(len(self.S))
+            name = 'State '+str(len(self.S))
             
         new_s = state(name, e_next, EFA, EEP, EED)
         self.S.append(new_s)
