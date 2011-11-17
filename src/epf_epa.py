@@ -4,18 +4,84 @@ Created on Jun 15, 2011
 @author: andrey
 '''
 
+import numpy as np
 
-import epf_epg as epg
-
-class reducer(object):
+class analyzer(object):
     def __init__(self):
         #Singletone stuff
         _instance = None
         def __new__(cls, *args, **kwargs):
             if not cls._instance:
-                cls._instance = super(reducer, cls).__new__(
+                cls._instance = super(analyzer, cls).__new__(
                                     cls, *args, **kwargs)
-            return cls._instance    
+            return cls._instanc
+
+
+    def direct_compute(self,G):
+        l=len(G.S)
+        P=np.zeros([l,l])
+        pointers = []
+        print "direct_compute started"
+        print "Matrix creation, size:" + str(l)+'x'+str(l)
+        for s in G.S:
+            pointers.append(s)
+        for a in G.A:
+            for i in range(l):
+                if (pointers[i] == a.s1):
+                    break
+            for j in range(l):
+                if (pointers[j] == a.s2):
+                    break
+            P[i,j]=a.pr
+        print "done"
+        print "Computation"
+        I=np.identity(l)
+        N=np.linalg.solve(I-P,I)
+        print "done"
+        for i in range(l):
+            if pointers[i] == G.initial:
+                break
+        for j in range(l):
+            pointers[j].pr = N[i,j]
+        print "direct_compute complete"    
+    
+    
+    
+    def iter_compute(self, G, accuracy):
+        print 'iter_compute started'
+        print 'given accuracy: '+str(accuracy)
+        
+        for s in G.S:
+            s.pr = 0
+            s.next_pr = 0
+        G.initial.pr = 1
+        cur_acc = 1
+        
+        iter = 0
+        while cur_acc > accuracy:
+            iter = iter+1
+            cur_acc = 1
+            for s in G.S:
+                if s.pr>0:
+                    if len(s.O)>0:
+                        #transient
+                        for a in s.O:
+                            a.s2.next_pr = a.s2.next_pr + s.pr * a.pr
+                    else:
+                        #absorbing
+                        s.next_pr = s.next_pr + s.pr
+                        cur_acc = cur_acc - s.pr
+                    
+            for s in G.S:
+                s.pr = s.next_pr
+            for s in G.S:
+                s.next_pr = 0.0
+
+        print 'iter_compute complete'
+        print 'iteration number: '+str(iter)
+        print 'achieved accuracy: '+str(cur_acc)
+    
+ 
     
     def loop_reduce(self,G,s_num,prints=False):
         for loop_arc in G.LA:
