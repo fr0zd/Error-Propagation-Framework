@@ -163,13 +163,13 @@ class graph(object):
             
 
             err_input = False
-            for ie in e_next.df_inputs:
+            for ie in e_next.DI:
                 if ie.e1 in EEP:
                     err_input=True
                     break
             left_pr=1
             chh = []
-            for ch in e_next.cf_outputs:
+            for ch in e_next.CO:
                 left_pr = left_pr - ch.pr
                 chh.append([ch.e2,ch.pr])
             if left_pr > 0:
@@ -291,9 +291,9 @@ class graph(object):
     
     
     
-    def iter_compute(self, acc):
+    def iter_compute(self, accuracy):
         print 'iter_compute started'
-        print 'given accuracy: '+str(acc)
+        print 'given accuracy: '+str(accuracy)
         
         for s in self.S:
             s.pr = 0
@@ -302,7 +302,7 @@ class graph(object):
         cur_acc = 1
         
         iter = 0
-        while cur_acc > acc:
+        while cur_acc > accuracy:
             iter = iter+1
             cur_acc = 1
             for s in self.S:

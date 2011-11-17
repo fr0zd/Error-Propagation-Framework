@@ -23,26 +23,10 @@ class element(object):
         self.epp = self.checker.check_pr(epp)
         self.edp = self.checker.check_pr(edp)
         self.edb = self.checker.check_edb(edb)
-        self.df_inputs=set([])
-        self.df_outputs=set([])
-        self.cf_inputs=set([])
-        self.cf_outputs=set([])
-    
-    def add_df_input(self,arc):
-        """Add a new data input to the current element from the element e"""
-        self.df_inputs.add(arc)
-            
-    def add_df_output(self,arc):
-        """Add a new data output to the current element to the element e"""
-        self.df_outputs.add(arc)
-            
-    def add_cf_input(self,arc):
-        """Add a new control flow predecessor to the current element"""
-        self.cf_inputs.add(arc)
-        
-    def add_cf_output(self,arc):
-        """Add a new control flow successor to the current element"""
-        self.cf_outputs.add(arc)        
+        self.DI=set([])
+        self.DO=set([])
+        self.CI=set([])
+        self.CO=set([])  
             
 class cf_arc(object):
     """Class-container for a CF arc"""
@@ -98,8 +82,8 @@ class system(object):
         if isinstance(e2, str):
             e2 = self.get_element_by_name(e2)           
         a = cf_arc(e1, e2, pr)
-        e1.add_cf_output(a)
-        e2.add_cf_input(a)
+        e1.CO.add(a)
+        e2.CI.add(a)
         self.ACF.append(a)            
 
     def add_df_arc(self, e1, e2):
@@ -109,8 +93,8 @@ class system(object):
         if isinstance(e2, str):
             e2 = self.get_element_by_name(e2)   
         a = df_arc(e1, e2)
-        e1.add_df_output(a)
-        e2.add_df_input(a)
+        e1.DO.add(a)
+        e2.DI.add(a)
         self.ADF.append(a) 
         
     def get_element_by_name(self, name):
