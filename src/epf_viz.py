@@ -21,7 +21,7 @@ class viz(object):
         if no_el_data:
             return e.name
         else:
-            s = e.name + '\\n' + 'FAP: ' + str(e.fap) + '  EPP: ' + str(e.epp) + '\\n' + 'EDP: ' + str(e.edp) + '  EDB: ' + str(e.edb)
+            s = e.name + '\\n' + 'fap: ' + str(e.fap) + '  epp: ' + str(e.epp) + '\\n' + 'edp: ' + str(e.edp) + '  edb: ' + str(e.edb)
             return s
         
     def draw_epm(self, S, no_el_data = False, no_pr = False):
@@ -116,7 +116,7 @@ class viz(object):
                     n = EPG.get_node(self.make_s_name(s))
                     n.attr['fillcolor']="white"           
         for a in G.A:
-            EPG.add_edge(self.make_s_name(a.s1), self.make_s_name(a.s2), label=str(a.pr))
+            EPG.add_edge(self.make_s_name(a.s1), self.make_s_name(a.s2), label=str(a.pr)[0:7])
         
         if name == '':
             EPG.draw(G.EPM.name+'/EPG.pdf',prog='dot')

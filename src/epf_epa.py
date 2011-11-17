@@ -1,5 +1,5 @@
 '''
-
+This module contains a singleton class with several methods for computation of the error propagation graph
 Created on Jun 15, 2011
 @author: andrey
 '''
@@ -7,6 +7,7 @@ Created on Jun 15, 2011
 import numpy as np
 
 class analyzer(object):
+    """EPG analyzer"""
     def __init__(self):
         #Singletone stuff
         _instance = None
@@ -18,6 +19,7 @@ class analyzer(object):
 
 
     def direct_compute(self,G):
+        """The method for direct computation of the given EPG. Based on numpy's linear solver"""
         l=len(G.S)
         P=np.zeros([l,l])
         pointers = []
@@ -48,6 +50,9 @@ class analyzer(object):
     
     
     def iter_compute(self, G, accuracy):
+        """A simple method for iterative computation of the given EPG.
+        An accuracy parameter controls method execution duration
+        """
         print 'iter_compute started'
         print 'given accuracy: '+str(accuracy)
         
@@ -94,6 +99,8 @@ class analyzer(object):
                 G.remove_arc(loop_arc)  
                 return True
         return False                       
+    
+    
     
     def state_reduce(self,G,s_num,initial,prints=False):
         for b in G.S:
@@ -166,8 +173,12 @@ class analyzer(object):
             if profit:
                 return True
         return False
+    
+    
             
     def reduce(self,G,s_num,prints=False):
+        """The method for EPG reduction using the loop reduction, state reduction, and arc reduction.
+        s_num - is a number of states that limits the reduction process"""
         initial = G.initial
         print 'reduction started'
         print 'original state number:'+str(len(G.S))

@@ -9,7 +9,7 @@ Created on Jun 15, 2011
 @author: andrey
 '''
 
-import epf_checker as edc
+import epf_misc as misc
 
 
 class element(object):
@@ -17,7 +17,7 @@ class element(object):
     
     def __init__(self, name, fap = 0.0, epp = 0.0, edp = 0.0, edb = 'FS'):
         """Constructor"""
-        self.checker = edc.data_checker()
+        self.checker = misc.data_checker()
         self.name = str(name)[0:128]
         self.fap = self.checker.check_pr(fap)
         self.epp = self.checker.check_pr(epp)
@@ -32,7 +32,7 @@ class cf_arc(object):
     """Class-container for a CF arc"""
     
     def __init__(self, e1, e2, pr = 1.0):
-        self.checker = edc.data_checker()
+        self.checker = misc.data_checker()
         self.e1 = self.checker.check_e(e1)
         self.e2 = self.checker.check_e(e2)
         self.pr = self.checker.check_pr(pr)
@@ -42,7 +42,7 @@ class df_arc(object):
     """Class-container for a DF arc"""
     
     def __init__(self, e1, e2):
-        self.checker = edc.data_checker()
+        self.checker = misc.data_checker()
         self.e1 = self.checker.check_e(e1)
         self.e2 = self.checker.check_e(e2)
         self.name = e1.name + ' -DF-> ' + e2.name
@@ -53,7 +53,7 @@ class system(object):
     def __init__(self, name = 'A system'):
         """Constructor"""
         self.name = name[0:127]
-        self.checker = edc.data_checker()
+        self.checker = misc.data_checker()
         self.E=set([])
         self.ACF = []
         self.ADF = []

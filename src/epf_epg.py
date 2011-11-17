@@ -4,16 +4,15 @@ Created on Jun 5, 2011
 @author: andrey
 '''
 
-import epf_checker as edc
+import epf_misc as misc
 import epf_viz as viz
-import numpy as np
 import time
 
 class arc(object):
     """Class-container for arc of an EPG"""
     def __init__(self, s1, s2, pr = 1.0, check = False):
         if check:
-            self.checker = edc.data_checker()
+            self.checker = misc.data_checker()
             self.s1 = self.checker.check_s(s1)
             self.s2 = self.checker.check_s(s2)
             self.pr = self.checker.check_pr(pr)
@@ -32,7 +31,7 @@ class state(object):
     def __init__(self, name, e_next = 'none', EFA = set([]), EEP = set([]), EED = set([]), check=False):
         self.name = str(name)[0:128]
         if check:
-            self.checker = edc.data_checker()
+            self.checker = misc.data_checker()
             if e_next=='none' or e_next=='FS':
                 self.e_next=e_next
             else:
@@ -62,7 +61,7 @@ class graph(object):
             self.S = []
             self.A = []
             self.LA = []
-            self.checker = edc.data_checker()
+            self.checker = misc.data_checker()
             self.gen_hist = []
             self.unknown_state = 0
             self.EPM = 0 
@@ -259,72 +258,6 @@ class graph(object):
                 i=i+1
         self.final_num = i
         return i
-    
-
-    def direct_compute(self):
-        l=len(self.S)
-        P=np.zeros([l,l])
-        pointers = []
-        print "direct_compute started"
-        print "Matrix creation, size:" + str(l)+'x'+str(l)
-        for s in self.S:
-            pointers.append(s)
-        for a in self.A:
-            for i in range(l):
-                if (pointers[i] == a.s1):
-                    break
-            for j in range(l):
-                if (pointers[j] == a.s2):
-                    break
-            P[i,j]=a.pr
-        print "done"
-        print "Computation"
-        I=np.identity(l)
-        N=np.linalg.solve(I-P,I)
-        print "done"
-        for i in range(l):
-            if pointers[i] == self.initial:
-                break
-        for j in range(l):
-            pointers[j].pr = N[i,j]
-        print "direct_compute complete"    
-    
-    
-    
-    def iter_compute(self, accuracy):
-        print 'iter_compute started'
-        print 'given accuracy: '+str(accuracy)
-        
-        for s in self.S:
-            s.pr = 0
-            s.next_pr = 0
-        self.initial.pr = 1
-        cur_acc = 1
-        
-        iter = 0
-        while cur_acc > accuracy:
-            iter = iter+1
-            cur_acc = 1
-            for s in self.S:
-                if s.pr>0:
-                    if len(s.O)>0:
-                        #transient
-                        for a in s.O:
-                            a.s2.next_pr = a.s2.next_pr + s.pr * a.pr
-                    else:
-                        #absorbing
-                        s.next_pr = s.next_pr + s.pr
-                        cur_acc = cur_acc - s.pr
-                    
-            for s in self.S:
-                s.pr = s.next_pr
-            for s in self.S:
-                s.next_pr = 0.0
-
-        print 'iter_compute complete'
-        print 'iteration number: '+str(iter)
-        print 'achieved accuracy: '+str(cur_acc)
-    
     
     
     
